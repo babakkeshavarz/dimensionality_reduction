@@ -41,13 +41,20 @@ y_train = pd.DataFrame(y_train)
 
 # view_digit(1)
 
+############### Linear dimensionality reduction techniques ##################
 
-## apply PCA
 from sklearn.decomposition import PCA
+from sklearn.decomposition import IncrementalPCA
+from sklearn.decomposition import SparsePCA
+
+
 n_components = 784
 random_state = 42
 
 pca = PCA(n_components=n_components, random_state=random_state)
+incrementalPCA = IncrementalPCA(n_components=n_components, batch_size=None) ## when the data is too large
+sparsePCA = SparsePCA(n_components=n_components, alpha= 0.0001 , random_state=random_state , n_jobs=-1) ## when some degree of sparsity is required
+
 X_train_pca = pca.fit_transform(X_train)
 X_train_pca = pd.DataFrame(X_train_pca)
 
@@ -57,3 +64,22 @@ print("Variance of the first 10 dimensions: ", sum(pca.explained_variance_ratio_
 
 
 scatterPlot(X_train_pca, y_train, "PCA")
+
+
+
+############### non-Linear dimensionality reduction techniques ##################
+from sklearn.decomposition import KernelPCA
+n_components = 100
+kernel = 'rbf'
+gamma = None
+random_state = 42
+n_jobs = -1
+
+KernelPCA = KernelPCA(n_components=n_components, kernel=kernel, gamma=gamma, random_state=random_state, n_jobs=n_jobs)
+
+X_train_kernelpca= KernelPCA.fit_transform(X_train.loc[0:1000 , :])
+X_train_kernelpca = pd.DataFrame(X_train_kernelpca)
+
+scatterPlot(X_train_kernelpca, y_train, "Kernel PCA")
+
+
