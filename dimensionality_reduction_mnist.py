@@ -196,6 +196,26 @@ random_state = 42
 
 tsne = TSNE(n_components=n_components, learning_rate=learning_rate, perplexity=perplexity, n_iter=n_iter, early_exaggeration=early_exaggeration, random_state=random_state)
 
-X_train_tsne = tsne.fit_transform(X_train_pca.loc[0:5000 , :9])
-X_train_tsne = pd.DataFrame(X_train_tsne , index=train_index[0:5001])
+X_train_tsne = tsne.fit_transform(X_train_pca.loc[0:1000 , :9])
+X_train_tsne = pd.DataFrame(X_train_tsne , index=train_index[0:1001])
 scatterPlot(X_train_tsne, y_train, 't-SNE')
+
+
+################################# Independent Component Analysis (ICA) ########################################
+## ICA is a linear dimensionality reduction technique that is used to separate independent sources from a mixture of signals.
+## ICA is used in signal processing and feature extraction. It is also used to remove noise from images.
+## ICA is computationally expensive
+##  ICA is used to separate independent sources from a mixture of signals.
+from sklearn.decomposition import FastICA
+n_components = 30 ## The number of components should be less than the number of features.
+algorithm = 'parallel'
+whiten = 'unit-variance'
+max_iter = 200
+random_state = 42
+
+fastICA = FastICA(n_components=n_components, algorithm=algorithm, whiten=whiten, max_iter=max_iter, random_state=random_state)
+fastICA.fit_transform(X_train)  ## to speed up, fit only a subset of the data then transform the whole data
+X_train_fastICA = fastICA.transform(X_train)
+X_train_fastICA = pd.DataFrame(X_train_fastICA , index=train_index)
+
+scatterPlot(X_train_fastICA, y_train, 'Fast ICA')
